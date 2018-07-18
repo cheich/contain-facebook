@@ -1,7 +1,7 @@
 {
-  "name": "contain-facebook",
-  "version": "1.4.0",
-  "description": "Facebook Container isolates your Facebook activity from the rest of your web activity in order to prevent Facebook from tracking you outside of the Facebook website via third party cookies. ",
+  "name": "contain-multi-service",
+  "version": "0.1",
+  "description": "Multi-Services Container is a fork from Facebook Container and extends its functionality to multiple services like Google and others.",
   "main": "background.js",
   "scripts": {
     "test": "eslint src test && npm run coverage",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:mozilla/contain-facebook.git"
+    "url": "git@github.com:mozilla/contain-multi-service.git"
   },
   "keywords": [
     "addon",
@@ -21,9 +21,9 @@
   "author": "Luke Crouch",
   "license": "MPL-2.0",
   "bugs": {
-    "url": "https://github.com/mozilla/contain-facebook/issues"
+    "url": "https://github.com/cheich/contain-multi-service/issues"
   },
-  "homepage": "https://github.com/mozilla/contain-facebook#readme",
+  "homepage": "https://github.com/cheich/contain-multi-service#readme",
   "devDependencies": {
     "chai": "^4.1.2",
     "eslint": "^4.19.1",

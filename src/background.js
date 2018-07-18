@@ -1,23 +1,127 @@
 // Param values from https://developer.mozilla.org/Add-ons/WebExtensions/API/contextualIdentities/create
-const FACEBOOK_CONTAINER_NAME = "Facebook";
-const FACEBOOK_CONTAINER_COLOR = "blue";
-const FACEBOOK_CONTAINER_ICON = "briefcase";
-const FACEBOOK_DOMAINS = [
-  "facebook.com", "www.facebook.com", "fb.com", "fbcdn.net", "cdn.fbsbx.com",
-  "instagram.com", "www.instagram.com",
-  "messenger.com", "www.messenger.com",
-  "whatsapp.com", "www.whatsapp.com", "web.whatsapp.com", "cdn.whatsapp.net", "www-cdn.whatsapp.net",
-  "atdmt.com"
+// Google domains from https://github.com/containers-everywhere/contain-google/blob/master/background.js
+// Amazon domains from https://github.com/Jackymancs4/contain-amazon/blob/master/background.js
+const services = [
+  {
+    name: "Facebook",
+    color: "blue",
+    icon: "briefcase",
+    domains: [
+      "facebook.com", "www.facebook.com", "fb.com", "fbcdn.net", "cdn.fbsbx.com",
+      "instagram.com", "www.instagram.com",
+      "messenger.com", "www.messenger.com",
+      "whatsapp.com", "www.whatsapp.com", "web.whatsapp.com", "cdn.whatsapp.net", "www-cdn.whatsapp.net",
+      "atdmt.com"
+    ]
+  },
+  {
+    name: "Google",
+    color: "red",
+    icon: "briefcase",
+    domains: [
+      "google.com", "google.ac", "google.ad", "google.ae", "google.com.af", "google.com.ag", "google.com.ai",
+      "google.al", "google.am", "google.co.ao", "google.com.ar", "google.as", "google.at", "google.com.au",
+      "google.az", "google.ba", "google.com.bd", "google.be", "google.bf", "google.bg", "google.com.bh",
+      "google.bi", "google.bj", "google.com.bn", "google.com.bo", "google.com.br", "google.bs", "google.bt",
+      "google.com.bw", "google.by", "google.com.bz", "google.ca", "google.com.kh", "google.cc", "google.cd",
+      "google.cf", "google.cat", "google.cg", "google.ch", "google.ci", "google.co.ck", "google.cl", "google.cm",
+      "google.cn", "google.com.co", "google.co.cr", "google.com.cu", "google.cv", "google.com.cy", "google.cz",
+      "google.de", "google.dj", "google.dk", "google.dm", "google.com.do", "google.dz", "google.com.ec",
+      "google.ee", "google.com.eg", "google.es", "google.com.et", "google.fi", "google.com.fj", "google.fm",
+      "google.fr", "google.ga", "google.ge", "google.gf", "google.gg", "google.com.gh", "google.com.gi",
+      "google.gl", "google.gm", "google.gp", "google.gr", "google.com.gt", "google.gy", "google.com.hk",
+      "google.hn", "google.hr", "google.ht", "google.hu", "google.co.id", "google.iq", "google.ie",
+      "google.co.il", "google.im", "google.co.in", "google.io", "google.is", "google.it", "google.je",
+      "google.com.jm", "google.jo", "google.co.jp", "google.co.ke", "google.ki", "google.kg", "google.co.kr",
+      "google.com.kw", "google.kz", "google.la", "google.lb", "google.com.lc", "google.li", "google.lk",
+      "google.co.ls", "google.lt", "google.lu", "google.lv", "google.com.ly", "google.co.ma", "google.md",
+      "google.me", "google.mg", "google.mk", "google.ml", "google.com.mm", "google.mn", "google.ms",
+      "google.com.mt", "google.mu", "google.mv", "google.mw", "google.com.mx", "google.com.my", "google.co.mz",
+      "google.com.na", "google.ne", "google.com.nf", "google.com.ng", "google.com.ni", "google.nl", "google.no",
+      "google.com.np", "google.nr", "google.nu", "google.co.nz", "google.com.om", "google.com.pk", "google.com.pa",
+      "google.com.pe", "google.com.ph", "google.pl", "google.com.pg", "google.pn", "google.com.pr", "google.ps",
+      "google.pt", "google.com.py", "google.com.qa", "google.ro", "google.rs", "google.ru", "google.rw",
+      "google.com.sa", "google.com.sb", "google.sc", "google.se", "google.com.sg", "google.sh", "google.si",
+      "google.sk", "google.com.sl", "google.sn", "google.sm", "google.so", "google.st", "google.sr",
+      "google.com.sv", "google.td", "google.tg", "google.co.th", "google.com.tj", "google.tk", "google.tl",
+      "google.tm", "google.to", "google.tn", "google.com.tr", "google.tt", "google.com.tw", "google.co.tz",
+      "google.com.ua", "google.co.ug", "google.co.uk", "google.us", "google.com.uy", "google.co.uz",
+      "google.com.vc", "google.co.ve", "google.vg", "google.co.vi", "google.com.vn", "google.vu", "google.ws",
+      "google.co.za", "google.co.zm", "google.co.zw",
+      "youtube.com", "www.youtube.com", "m.youtube.com", "youtu.be",
+      "blogger.com",
+      "doubleclickbygoogle.com",
+      "googleblog.com", "blog.google", "googleusercontent.com", "googlesource.com", "abc.xyz", "design.google",
+      "gallery.io",
+      "blogspot.com", "blogspot.ae", "blogspot.al", "blogspot.am", "blogspot.com.ar", "blogspot.co.at", "blogspot.com.au",
+      "blogspot.ba", "blogspot.be", "blogspot.bg", "blogspot.bj", "blogspot.com.br", "blogspot.com.by", "blogspot.ca",
+      "blogspot.cf", "blogspot.ch", "blogspot.cl", "blogspot.com.co", "blogspot.cv", "blogspot.com.cy", "blogspot.cz",
+      "blogspot.de", "blogspot.dj", "blogspot.dk", "blogspot.dm", "blogspot.com.do", "blogspot.dz", "blogspot.com.eg",
+      "blogspot.es", "blogspot.fi", "blogspot.fr", "blogspot.gr", "blogspot.hr", "blogspot.hu", "blogspot.co.id", "blogspot.ie",
+      "blogspot.co.il", "blogspot.in", "blogspot.is", "blogspot.it", "blogspot.jp", "blogspot.co.ke", "blogspot.kr", "blogspot.li",
+      "blogspot.lt", "blogspot.lu", "blogspot.md", "blogspot.mk", "blogspot.com.mt", "blogspot.mx", "blogspot.my", "blogspot.com.ng",
+      "blogspot.nl", "blogspot.no", "blogspot.co.nz", "blogspot.pt", "blogspot.qa", "blogspot.ro", "blogspot.rs", "blogspot.ru",
+      "blogspot.se", "blogspot.sg", "blogspot.si", "blogspot.sk", "blogspot.sn", "blogspot.com.sr", "blogspot.td", "blogspot.co.tl",
+      "blogspot.co.to", "blogspot.com.tr", "blogspot.tw", "blogspot.co.uk", "blogspot.com.uy", "blogspot.co.za"
+    ]
+  },
+  {
+    name: "Reddit",
+    color: "red",
+    icon: "briefcase",
+    domains: ["reddit.com", "www.reddit.com"]
+  },
+  {
+    name: "Twitter",
+    color: "blue",
+    icon: "briefcase",
+    domains: ["twitter.com", "www.twitter.com", "t.co", "twimg.com"]
+  },
+  {
+    name: "Twitch",
+    color: "purple",
+    icon: "briefcase",
+    domains: ["twitch.tv", "www.twitch.tv"]
+  },
+  {
+    name: "Amazon",
+    color: "red",
+    icon: "briefcase",
+    domains: [
+      "amazon.it", "amazon.de", "amazon.com", "amazon.com.br", "amazon.in", "amazon.com.au",
+      "amazon.es", "amazon.com.mx", "amazon.co.jp", "amazon.in", "amazon.co.uk", "amazon.ca",
+      "amazon.fr", "amazon.com.sg",
+      "awscloud.com", "amazon.company", "amazon.express", "amazon.gd", "amazon.international",
+      "amazon.ltda", "amazon.press", "amazon.shopping", "amazon.tickets", "amazon.tv", "amazon.cruises",
+      "amazon.dog", "amazon.express", "amazon.game", "amazon.gent", "amazon.salon", "amazon.shopping",
+      "amazon.tours", "amazon.wiki", "amazon.clothing", "amazon.energy", "amazon.fund", "amazon.hockey",
+      "amazon.kiwi", "amazon.re", "amazon.soccer", "amazon.tienda", "amazon.training", "amazon.jobs",
+      "primevideo.com", "mturk.com", "lab126.com", "amazonpay.in", "amazonteam.org", "awsevents.com",
+      "seattlespheres.com"
+    ]
+  },
+  {
+    name: "Github",
+    color: "green",
+    icon: "briefcase",
+    domains: ["github.com", "www.github.com"]
+  },
+  {
+    name: "Soundcloud",
+    color: "orange",
+    icon: "briefcase",
+    domains: ["soundcloud.com", "www.soundcloud.com"]
+  }
 ];
 
 const MAC_ADDON_ID = "@testpilot-containers";
 
 let macAddonEnabled = false;
-let facebookCookieStoreId = null;
+let servicesCookieStoreId = {};
 
 const canceledRequests = {};
 const tabsWaitingToLoad = {};
-const facebookHostREs = [];
+const servicesHostREs = {};
 
 async function isMACAddonEnabled () {
   try {
@@ -60,16 +164,18 @@ async function setupMACAddonListeners () {
 }
 
 async function sendJailedDomainsToMAC () {
-  try {
-    return await browser.runtime.sendMessage(MAC_ADDON_ID, {
-      method: "jailedDomains",
-      urls: FACEBOOK_DOMAINS.map((domain) => {
-        return `https://${domain}/`;
-      })
-    });
-  } catch (e) {
-    // We likely might want to handle this case: https://github.com/mozilla/contain-facebook/issues/113#issuecomment-380444165
-    return false;
+  for (let service of services) {
+    try {
+      return await browser.runtime.sendMessage(MAC_ADDON_ID, {
+        method: "jailedDomains",
+        urls: service.domains.map((domain) => {
+          return `https://${domain}/`;
+        })
+      });
+    } catch (e) {
+      // We likely might want to handle this case: https://github.com/mozilla/contain-facebook/issues/113#issuecomment-380444165
+      return false;
+    }
   }
 }
 
@@ -132,75 +238,83 @@ function shouldCancelEarly (tab, options) {
   return false;
 }
 
-function generateFacebookHostREs () {
-  for (let facebookDomain of FACEBOOK_DOMAINS) {
-    facebookHostREs.push(new RegExp(`^(.*\\.)?${facebookDomain}$`));
+function generateServicesHostREs () {
+  for (let service of services) {
+    servicesHostREs[service.name] = [];
+
+    for (let domain of service.domains) {
+      servicesHostREs[service.name].push(new RegExp(`^(.*\\.)?${domain}$`));
+    }
   }
 }
 
-async function clearFacebookCookies () {
-  // Clear all facebook cookies
-  const containers = await browser.contextualIdentities.query({});
-  containers.push({
-    cookieStoreId: "firefox-default"
-  });
-
-  let macAssignments = [];
-  if (macAddonEnabled) {
-    const promises = FACEBOOK_DOMAINS.map(async facebookDomain => {
-      const assigned = await getMACAssignment(`https://${facebookDomain}/`);
-      return assigned ? facebookDomain : null;
+async function clearServiceCookies () {
+  for (let service of services) {
+    // Clear all Service cookies
+    const containers = await browser.contextualIdentities.query({});
+    containers.push({
+      cookieStoreId: "firefox-default"
     });
-    macAssignments = await Promise.all(promises);
-  }
 
-  FACEBOOK_DOMAINS.map(async facebookDomain => {
-    const facebookCookieUrl = `https://${facebookDomain}/`;
-
-    // dont clear cookies for facebookDomain if mac assigned (with or without www.)
-    if (macAddonEnabled &&
-        (macAssignments.includes(facebookDomain) ||
-         macAssignments.includes(`www.${facebookDomain}`))) {
-      return;
+    let macAssignments = [];
+    if (macAddonEnabled) {
+      const promises = service.domains.map(async serviceDomain => {
+        const assigned = await getMACAssignment(`https://${serviceDomain}/`);
+        return assigned ? serviceDomain : null;
+      });
+      macAssignments = await Promise.all(promises);
     }
 
-    containers.map(async container => {
-      const storeId = container.cookieStoreId;
-      if (storeId === facebookCookieStoreId) {
-        // Don't clear cookies in the Facebook Container
+    service.domains.map(async serviceDomain => {
+      const serviceCookieUrl = `https://${serviceDomain}/`;
+
+      // dont clear cookies for serviceDomain if mac assigned (with or without www.)
+      if (macAddonEnabled &&
+          (macAssignments.includes(serviceDomain) ||
+           macAssignments.includes(`www.${serviceDomain}`))) {
         return;
       }
 
-      const cookies = await browser.cookies.getAll({
-        domain: facebookDomain,
-        storeId
-      });
+      containers.map(async container => {
+        const storeId = container.cookieStoreId;
+        if (storeId === servicesCookieStoreId[service.name]) {
+          // Don't clear cookies in the Service Container
+          return;
+        }
 
-      cookies.map(cookie => {
-        browser.cookies.remove({
-          name: cookie.name,
-          url: facebookCookieUrl,
+        const cookies = await browser.cookies.getAll({
+          domain: serviceDomain,
           storeId
         });
+
+        cookies.map(cookie => {
+          browser.cookies.remove({
+            name: cookie.name,
+            url: serviceCookieUrl,
+            storeId
+          });
+        });
+        // Also clear Service Workers as it breaks detecting onBeforeRequest
+        await browser.browsingData.remove({hostnames: [serviceDomain]}, {serviceWorkers: true});
       });
-      // Also clear Service Workers as it breaks detecting onBeforeRequest
-      await browser.browsingData.remove({hostnames: [facebookDomain]}, {serviceWorkers: true});
     });
-  });
+  }
 }
 
 async function setupContainer () {
-  // Use existing Facebook container, or create one
-  const contexts = await browser.contextualIdentities.query({name: FACEBOOK_CONTAINER_NAME});
-  if (contexts.length > 0) {
-    facebookCookieStoreId = contexts[0].cookieStoreId;
-  } else {
-    const context = await browser.contextualIdentities.create({
-      name: FACEBOOK_CONTAINER_NAME,
-      color: FACEBOOK_CONTAINER_COLOR,
-      icon: FACEBOOK_CONTAINER_ICON
-    });
-    facebookCookieStoreId = context.cookieStoreId;
+  for (let service of services) {
+    // Use existing service container, or create one
+    const contexts = await browser.contextualIdentities.query({name: service.name});
+    if (contexts.length > 0) {
+      servicesCookieStoreId[service.name] = contexts[0].cookieStoreId;
+    } else {
+      const context = await browser.contextualIdentities.create({
+        name: service.name,
+        color: service.color,
+        icon: service.icon
+      });
+      servicesCookieStoreId[service.name] = context.cookieStoreId;
+    }
   }
 }
 
@@ -215,10 +329,14 @@ function reopenTab ({url, tab, cookieStoreId}) {
   browser.tabs.remove(tab.id);
 }
 
-function isFacebookURL (url) {
+function isServiceURL (url, serviceName) {
   const parsedUrl = new URL(url);
-  for (let facebookHostRE of facebookHostREs) {
-    if (facebookHostRE.test(parsedUrl.host)) {
+
+  // console.log(servicesHostREs.hasOwnProperty(serviceName));
+
+
+  for (let serviceHostRE of servicesHostREs[serviceName]) {
+    if (serviceHostRE.test(parsedUrl.host)) {
       return true;
     }
   }
@@ -226,24 +344,28 @@ function isFacebookURL (url) {
 }
 
 function shouldContainInto (url, tab) {
-  if (!url.startsWith("http")) {
-    // we only handle URLs starting with http(s)
-    return false;
-  }
+  let result = false;
 
-  if (isFacebookURL(url)) {
-    if (tab.cookieStoreId !== facebookCookieStoreId) {
-      // Facebook-URL outside of Facebook Container Tab
-      // Should contain into Facebook Container
-      return facebookCookieStoreId;
+  for (let service of services) {
+    if (!url.startsWith("http")) {
+      // we only handle URLs starting with http(s)
+      result = false;
     }
-  } else if (tab.cookieStoreId === facebookCookieStoreId) {
-    // Non-Facebook-URL inside Facebook Container Tab
-    // Should contain into Default Container
-    return "firefox-default";
+
+    if (isServiceURL(url, service.name)) {
+      if (tab.cookieStoreId !== servicesCookieStoreId[service.name]) {
+        // Service-URL outside of Service Container Tab
+        // Should contain into Service Container
+        result = servicesCookieStoreId[service.name];
+      }
+    } else if (tab.cookieStoreId === servicesCookieStoreId[service.name]) {
+      // Non-Service-URL inside Service Container Tab
+      // Should contain into Default Container
+      result = "firefox-default";
+    }
   }
 
-  return false;
+  return result;
 }
 
 async function maybeReopenAlreadyOpenTabs () {
@@ -308,8 +430,8 @@ async function maybeReopenAlreadyOpenTabs () {
   });
 }
 
-async function containFacebook (options) {
-  // Listen to requests and open Facebook into its Container,
+async function containService (options) {
+  // Listen to requests and open Service into its Container,
   // open other sites into the default tab context
   if (options.tabId === -1) {
     // Request doesn't belong to a tab
@@ -367,8 +489,8 @@ async function containFacebook (options) {
     console.log(error);
     return;
   }
-  clearFacebookCookies();
-  generateFacebookHostREs();
+  clearServiceCookies();
+  generateServicesHostREs();
 
   // Clean up canceled requests
   browser.webRequest.onCompleted.addListener((options) => {
@@ -383,7 +505,7 @@ async function containFacebook (options) {
   },{urls: ["<all_urls>"], types: ["main_frame"]});
 
   // Add the request listener
-  browser.webRequest.onBeforeRequest.addListener(containFacebook, {urls: ["<all_urls>"], types: ["main_frame"]}, ["blocking"]);
+  browser.webRequest.onBeforeRequest.addListener(containService, {urls: ["<all_urls>"], types: ["main_frame"]}, ["blocking"]);
 
   maybeReopenAlreadyOpenTabs();
 })();
